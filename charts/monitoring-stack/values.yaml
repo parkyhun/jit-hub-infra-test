@@ -68,6 +68,11 @@ loki:
     replicas: 0
   write:
     replicas: 0
+  # ★추가 - memcached 메모리 요구가 커서 비활성
+  chunksCache:
+    enabled: false
+  resultsCache:
+    enabled: false
 
 # 로그 수집기 - 모든 클러스터에서 활성화
 promtail:

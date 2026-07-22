@@ -62,7 +62,13 @@ loki:
     enabled: true
     server: "172.16.8.203"        # NFS 서버 IP (실제 IP로 변경 필요)
     path: "/nfs/shared/jithub-loki"   # NFS 경로
-    storage: 50Gi
+    #storage: 50Gi
+    storage: 10Gi                     # ★수정 - 온프렘 용량 절약
+  # ★추가 - memcached가 메모리를 크게 요구해 온프렘에서 Pending 발생
+  chunksCache:
+    enabled: false
+  resultsCache:
+    enabled: false
 
 promtail:
   enabled: true
@@ -75,6 +81,6 @@ promtail:
 # EKS 클러스터들의 remote_write/promtail을 받는 Ingress
 ingestIngress:
   enabled: true
-  domain: unzipp.cloud
+  domain: azastest.shop             # ★수정 - unzipp.cloud → 내 도메인
   prometheusServiceName: onprem-monitoring-stack-ku-prometheus
   lokiServiceName: onprem-monitoring-stack-loki
