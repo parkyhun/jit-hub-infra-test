@@ -53,3 +53,15 @@ karpenter:
 
 customScheduler:
   enabled: true
+
+serviceMonitor:
+  enabled: true
+  # kube-prometheus-stack 릴리스명 (클러스터마다 다름)
+  releaseLabel: eks-a-monitoring-stack
+  appLabels:
+    - weather
+    - traffic
+    - tourist
+    - auth
+  portName: http
+  interval: 15s
