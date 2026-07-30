@@ -30,7 +30,7 @@ export let options = {
 };
 
 export default function () {
-  const BASE_URL = 'http://localhost:8002';
+  const BASE_URL = 'http://localhost:8003';
   const trafficUrl = `${BASE_URL}/api/traffic`;
   
   const res = http.get(trafficUrl, {
