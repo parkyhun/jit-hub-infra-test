@@ -26,8 +26,8 @@ module "eks" {
   # 워커 노드 그룹 설정
   node_groups = {
     samsi-prod-eks-worker = {
-      #instance_types = ["t3.medium"]
-      instance_types = ["t3.small"]
+      instance_types = ["t3.medium"]
+      #instance_types = ["t3.small"]
       ami_type       = "AL2_x86_64"
       min_size       = 4    # 최소노드 수
       max_size       = 6    # 최대노드 수
