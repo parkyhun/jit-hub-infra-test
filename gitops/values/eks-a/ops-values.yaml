@@ -8,7 +8,9 @@ keda:
   minReplicaCount: 3
   maxReplicaCount: 10
   cooldownPeriod: 300
-  threshold: '50'
+  threshold: '50'   # 개선 TODO [1] : 임계값 실측 최적화 필요 (현재는 임의값)
+  scaleDownStabilization: 300       # 개선 TODO [2] 
+  scaleUpStabilization: 0           # 개선 TODO [3]
   # ArgoCD 배포 시 릴리스명이 접두사로 붙어 클러스터마다 이름이 달라짐
   serverAddress: http://eks-a-monitoring-stack-kub-prometheus.monitoring.svc.cluster.local:9090
   fallback:
@@ -26,8 +28,8 @@ karpenter:
   iamRole: KarpenterNodeRole-eks-a
 
   instanceTypes:   # 인스턴스 type
-    - t3.small     # cpu 2, 2GB
-    #- t3.medium    # cpu 2, 4GB
+    #- t3.small     # cpu 2, 2GB
+    - t3.medium    # cpu 2, 4GB
     #- t3.large     # cpu 2, 8GB
 
   capacityTypes:   # 인스턴스 유형

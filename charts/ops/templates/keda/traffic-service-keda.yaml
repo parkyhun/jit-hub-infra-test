@@ -12,6 +12,17 @@ spec:
   minReplicaCount: {{ .Values.keda.minReplicaCount | default 1 }}
   maxReplicaCount: {{ .Values.keda.maxReplicaCount | default 5 }}
   cooldownPeriod: {{ .Values.keda.cooldownPeriod | default 300 }}
+
+  advanced:      # 개선 TODO [1] 
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          # 축소 시 안정화 대기 (기본 300초=5분) → 튜닝 대상
+          stabilizationWindowSeconds: {{ .Values.keda.scaleDownStabilization | default 300 }}
+        scaleUp:
+          # 확장 시 안정화 대기 (0이면 즉시 확장)
+          stabilizationWindowSeconds: {{ .Values.keda.scaleUpStabilization | default 0 }}
+          
   # Prometheus 연결 실패 시 최소 가용성 유지
   fallback:
     failureThreshold: {{ .Values.keda.fallback.failureThreshold | default 3 }}
