@@ -1,32 +1,30 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
-const BASE_URL = __ENV.TARGET_URL || 'http://azastest.shop';
-const ENDPOINT = __ENV.ENDPOINT || '/tourist/health';   // ← tourist 실제 경로로 수정 필요
+const TOURIST = 'http://localhost:18004/health';
+const TRAFFIC = 'http://localhost:18003/health';
+const WEATHER = 'http://localhost:18002/health';
+
+const mk = (exec) => ({
+  executor: 'ramping-arrival-rate', startRate: 200, timeUnit: '1s',
+  preAllocatedVUs: 500, maxVUs: 3000, exec,
+  stages: [
+    { target: 2000, duration: '30s' },  // 각 서비스 2000 RPS → pod 20개(새 max)
+    { target: 2000, duration: '3m' },
+    { target: 0,    duration: '10s' },
+  ],
+});
 
 export const options = {
   scenarios: {
-    big_load: {
-      executor: 'ramping-arrival-rate',
-      startRate: 100,                    // 강한 부하라 시작 RPS도 조금 높게
-      timeUnit: '1s',
-      preAllocatedVUs: 200,
-      maxVUs: 1500,                      // 1000 RPS 대응 위해 상한 넉넉히
-      stages: [
-        { target: 1000, duration: '30s' }, // 30초 만에 1000 RPS로 급증 (재부하 = 피크 재현)
-        { target: 1000, duration: '3m' },  // 3분간 1000 RPS 유지 (pod 10개=max 확장 관찰)
-        { target: 0,    duration: '10s' }, // 종료
-      ],
-    },
+    tourist: mk('hitTourist'),
+    traffic: mk('hitTraffic'),
+    weather: mk('hitWeather'),
   },
 };
 
-export default function () {
-  const res = http.get(`${BASE_URL}${ENDPOINT}`, { timeout: '10s' });
-  check(res, { 'status 200': (r) => r.status === 200 });
-}
+export function hitTourist() { check(http.get(TOURIST,{timeout:'10s'}), {'200':r=>r.status===200}); }
+export function hitTraffic() { check(http.get(TRAFFIC,{timeout:'10s'}), {'200':r=>r.status===200}); }
+export function hitWeather() { check(http.get(WEATHER,{timeout:'10s'}), {'200':r=>r.status===200}); }
 
-export function setup() {
-  console.log('[2번-강한부하] 1000 RPS 목표 → pod 10개(max) 예상 (임계값 100)');
-  console.log(`대상: ${BASE_URL}${ENDPOINT}`);
-}
+export function setup(){ console.log('[2번-강한부하] 각 2000 RPS → 각 20개(max) 예상'); }
