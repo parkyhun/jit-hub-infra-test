@@ -9,8 +9,6 @@ keda:
   maxReplicaCount: 10
   cooldownPeriod: 300
   threshold: '400'                   
-  scaleDownStabilization: 300       # 개선 TODO [2] 
-  scaleUpStabilization: 0           # 개선 TODO [3]
   serverAddress: http://eks-b-monitoring-stack-kub-prometheus.monitoring.svc.cluster.local:9090   # eks-b 경로 확인 필요
   fallback:
     failureThreshold: 3

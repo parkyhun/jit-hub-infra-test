@@ -8,9 +8,8 @@ keda:
   minReplicaCount: 3
   maxReplicaCount: 10
   cooldownPeriod: 300
-  threshold: '400'   
-  scaleDownStabilization: 300       # 개선 TODO [2] 
-  scaleUpStabilization: 0           # 개선 TODO [3]
+  #threshold: '400'   
+  threshold: '100'    # 테스트를 위한 임계값 변경
   # ArgoCD 배포 시 릴리스명이 접두사로 붙어 클러스터마다 이름이 달라짐
   serverAddress: http://eks-a-monitoring-stack-kub-prometheus.monitoring.svc.cluster.local:9090
   fallback:
